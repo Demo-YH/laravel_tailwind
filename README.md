@@ -44,7 +44,7 @@
 #### DB_HOST=127.0.0.1　使用しているdb名に修正  
 #### DB_HOST以降からDB_PASSWORDまでのコメントアウト解除及び、自身で設定した内容への修正を行う  
 #### 20. php artisan migrate　コマンドでマイグレーション仕直す  
-#### ※php.newでの環境構築と同等にしたかったので、上記packageを選択しているのでpackageはお好みでどうぞ  
+#### ※dbはお好みでどうぞ、sqliteを使用する場合は上記手順は不要  
 #### 21. composer require laravel/breeze --dev　コマンドでbreezeパッケージインストール
 #### 22. php artisan breeze:install　コマンドでbreezeインストール  
 #### 23. bun install　コマンドでbunインストール  
@@ -75,6 +75,8 @@
 ※本repositoryは、laravel12及びbunを使用し、blade　compornent使用に変更した内容で構築。  
 ## 比較  
 #### bunを使用したが特に不自由は感じなかった。  
+## 所感  
 #### バージョンが古いので読替えて構築するので大変だったが、ある程度基本的な内容の復習の役にたった。  
 #### フロントからの構築内容だったので難しく思えた。  
+#### modelでデータ加工を行う構築の仕方の役にたった。  
 #### seederについて学習することができた。
