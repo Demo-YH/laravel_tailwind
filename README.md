@@ -8,6 +8,7 @@
 <img alt="Static Badge" src="https://img.shields.io/badge/Laravel12-l?style=plastic&logo=laravel&logoColor=%23ffffff&labelColor=%23FF2D20&color=%23FF2D20">
 <img alt="Static Badge" src="https://img.shields.io/badge/bun-b?style=plastic&logo=bun&logoColor=%23ffffff&labelColor=%23000000&color=%23000000">
 <img alt="Static Badge" src="https://img.shields.io/badge/bootstrap-b?style=plastic&logo=bootstrap&logoColor=%23ffffff&labelColor=%237952B3&color=%237952B3">
+<img alt="Static Badge" src="https://img.shields.io/badge/tailwind-%20?style=plastic&logo=tailwindcss&logoColor=ffffff&color=%2306B6D4">
 <img alt="Static Badge" src="https://img.shields.io/badge/vite-v?style=plastic&logo=vite&logoColor=%23ffffff&labelColor=%23646CFF&color=%23646CFF">
 <img alt="Static Badge" src="https://img.shields.io/badge/-breeze?style=plastic&logo=breeze&label=breeze&labelColor=c1c1c1&color=c1c1c1">  
 
@@ -55,6 +56,8 @@
 #### 27. composer require laravel-lang/lang:~8.0　コマンドで翻訳ファイル取得  
 #### 28. cp ./vendor/laravel-lang/lang/json/ja.json ./lang/　コマンドで作成された ja.json アプリケーションのディレクトリにコピー  
 #### 29. cp -r ./vendor/laravel-lang/lang/src/ja ./lang/　コマンドで と ja ディレクトリをアプリケーションのディレクトリにコピー  
+#### 30. php artisan install:api　コマンドでAPIルーティングを有効にする
+#### 31. tailwind.config.jsにてtailwindを使用する設定を行う。
 #### ※laravel12再度表示確認  
 #### ※個人お試し用以外での用途は非推奨  
 ## git cloneg後  
@@ -66,3 +69,12 @@
 #### 6. php artisan migrate　コマンド実行でdb再度作成  
 #### 7. bun install　コマンドでbunインストール  
 #### 8. bun run build　コマンド実行  
+## 参考  
+[参考サイト](https://www.kamome-susume.com/laratto-overview/)  
+※laravel9使用の内容が記載されている。  
+※本repositoryは、laravel12及びbunを使用し、blade　compornent使用に変更した内容で構築。  
+## 比較  
+#### bunを使用したが特に不自由は感じなかった。  
+#### バージョンが古いので読替えて構築するので大変だったが、ある程度基本的な内容の復習の役にたった。  
+#### フロントからの構築内容だったので難しく思えた。  
+#### seederについて学習することができた。
