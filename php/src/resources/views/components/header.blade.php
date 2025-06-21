@@ -22,7 +22,7 @@
                 <div class="mb-1 xl:w-96">
                     <form action="{{ route('top.index') }}" method="GET" class="flex">
                         <input
-                            type="search"
+                            type="text"
                             class="form-control block w-full px-3 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-l transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             id="search"
                             name="keyword"
@@ -33,7 +33,7 @@
                             検索
                         </button>
                     </form>
-                    @if (request('keyword'))
+                    @if (!empty(request('keyword')))
                     <p class="text-sm text-gray-500 mt-2">
                     「{{ request('keyword') }}」の検索結果: {{ $posts_count }}  件
                     </p>

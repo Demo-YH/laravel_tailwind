@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\User\TrashController;
 use App\Http\Controllers\TopController;
+use Illuminate\Pagination\Paginator;
 
 class PostController extends Controller
 {
@@ -30,7 +31,7 @@ class PostController extends Controller
     public function index(int $id)
     {
         // ユーザーIDと一致する投稿データを取得
-        $posts = $this->post->getAllPostsByUserId($id);
+        $posts = $this->post->getAllPostsByUserId($id)->Paginate(10);
         $categories = $this->category->getAllCategories();
         return view('user.list.index', compact(
             'posts',
@@ -142,11 +143,10 @@ class PostController extends Controller
     public function saveDraft(Request $request)
     {
         $user_id = auth()->user()->id;
-
         $publish_flg = 0;
 
         // 下書き保存の記事一覧を取得
-        $saveDrafts = $this->post->getArticlePosts($user_id, $publish_flg);
+        $saveDrafts = $this->post->getArticlePosts($user_id, $publish_flg)->Paginate(10);
         return view('user.list.saveDraft', compact(
             'saveDrafts',
         ));
@@ -164,7 +164,7 @@ class PostController extends Controller
         $publish_flg = 1;
 
         // 公開中の記事一覧を取得
-        $releases = $this->post->getArticlePosts($user_id, $publish_flg);
+        $releases = $this->post->getArticlePosts($user_id, $publish_flg)->Paginate(10);
         return view('user.list.release', compact(
             'releases',
         ));
@@ -182,7 +182,7 @@ class PostController extends Controller
         $publish_flg = 2;
 
         // 予約公開の記事一覧を取得
-        $reservationPosts = $this->post->getArticlePosts($user_id, $publish_flg);
+        $reservationPosts = $this->post->getArticlePosts($user_id, $publish_flg)->Paginate(10);
         return view('user.list.reservationRelease', compact(
             'reservationPosts',
         ));

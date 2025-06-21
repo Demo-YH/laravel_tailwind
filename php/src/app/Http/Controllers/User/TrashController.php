@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\Category;
+use Illuminate\Pagination\Paginator;
 
 class TrashController extends Controller
 {
@@ -28,7 +29,7 @@ class TrashController extends Controller
         $user_id = auth()->user()->id;
 
         // ユーザーIDをもとに、論理削除されているdelete_flg=1のデータを取得
-        $trash_posts = $this->post->getTrashPostLists($user_id);
+        $trash_posts = $this->post->getTrashPostLists($user_id)->Paginate(10);
         return view('user.list.trash', compact(
             'user_id',
             'trash_posts',
@@ -101,54 +102,6 @@ class TrashController extends Controller
             'user_id',
             'trash_posts',
         ))->with('delete', '記事を完全に削除しました。');
-    }
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**

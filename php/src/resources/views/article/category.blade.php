@@ -42,6 +42,7 @@
             </div>
         @endforeach
     </div>
+    {{ $posts->links('vendor.pagination.tailwind2') }}
     </section>
 
     <x-slot:footer>

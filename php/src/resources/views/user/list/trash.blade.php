@@ -115,6 +115,7 @@
                     </div>
                 </div>
             </div>
+            {{ $trash_posts->links('vendor.pagination.tailwind2') }}
         </div>
     </section>
 </x-user-app>

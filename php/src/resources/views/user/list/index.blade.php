@@ -174,6 +174,7 @@
                     </div>
                 </div>
             </div>
+            {{ $posts->links('vendor.pagination.tailwind2') }}
         </div>
     </section>
     <x-slot:footer>

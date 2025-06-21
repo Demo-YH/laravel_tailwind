@@ -62,8 +62,7 @@ class Post extends Model
                             ['delete_flg', 0],
                         ])
                         ->with('category')
-                        ->orderBy('updated_at', 'DESC')
-                        ->get();
+                        ->orderBy('updated_at', 'DESC');
         return $result;
     }
 
@@ -77,8 +76,7 @@ class Post extends Model
         $result = $this->where([
                             ['category_id', $category_id],
                             ['delete_flg', 0],
-                        ])
-                        ->get();
+        ]);
         return $result;
     }
 
@@ -166,9 +164,7 @@ class Post extends Model
         $result = $this->where([
                             ['user_id', $user_id],
                             ['delete_flg', 1],
-                        ])
-                        ->get();
-
+        ]);
         return $result;
     }
 
@@ -229,8 +225,7 @@ class Post extends Model
                             ['publish_flg', $flg],
                             ['delete_flg', 0]
                         ])
-                        ->orderBy('updated_at', 'DESC')
-                        ->get();
+                        ->orderBy('updated_at', 'DESC');
         return $result;
     }
 
