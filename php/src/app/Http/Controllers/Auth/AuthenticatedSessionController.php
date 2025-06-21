@@ -28,6 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if ($request->session()->has('url.intended')) {
+            $intendedUrl = $request->session()->pull('url.intended');
+            return redirect()->intended($intendedUrl);
+        }
+
         return redirect()->intended(route('top.index', absolute: false));
     }
 

@@ -5,19 +5,17 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Models\Category;
 
-class Sidebar extends Component
+class Header extends Component
 {
-    public $categories;
+    public $posts_count;
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(int $postsCount = 0)
     {
         //
-        $this->categories = $category->all();
-        dd($category);
+        $this->posts_count = $postsCount;
     }
 
     /**
@@ -25,6 +23,6 @@ class Sidebar extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.sidebar');
+        return view('components.header');
     }
 }

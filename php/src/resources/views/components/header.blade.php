@@ -20,12 +20,24 @@
             </a>
             <div class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
                 <div class="mb-1 xl:w-96">
-                <input
-                    type="search"
-                    class="form-control block w-full px-3 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    id="search"
-                    placeholder="ニュースを検索..."
-                />
+                    <form action="{{ route('top.index') }}" method="GET" class="flex">
+                        <input
+                            type="search"
+                            class="form-control block w-full px-3 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-l transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            id="search"
+                            name="keyword"
+                            placeholder="ニュースを検索..."
+                            value="{{ request('keyword') }}"
+                        />
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r flex items-center justify-center">
+                            検索
+                        </button>
+                    </form>
+                    @if (request('keyword'))
+                    <p class="text-sm text-gray-500 mt-2">
+                    「{{ request('keyword') }}」の検索結果: {{ $posts_count }}  件
+                    </p>
+                    @endif
                 </div>
             </div>
 

@@ -19,19 +19,41 @@ class TopController extends Controller
     }
     /**
      * 総合トップ画面
+     * @param Request $request
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user_id = $this->userService->loginUserId();
+        $user_id = $this->userService->loginUserId(); // ユーザーIDが必要であれば残す
         $categories = $this->category->getAllCategories();
 
-        // 全ての投稿データを取得(publish_flgが公開のみ,最新更新日時順にソート)
-        $posts = $this->post->getPostsSortByLatestUpdate();
+        $keyword = $request->input('keyword'); // リクエストからキーワードを取得
+
+        // Postモデルのクエリビルダーを初期化
+        $postsQuery = Post::query()
+            ->where('publish_flg', 1) // 公開済みの投稿のみ
+            ->where('delete_flg', 0);  // 削除されていない投稿のみ
+
+        // キーワードが存在する場合のみ検索条件を追加
+        if (!empty($keyword)) {
+            $postsQuery->where(function ($query) use ($keyword) {
+                // 論理的なAND (タイトルにキーワード OR 本文にキーワード)
+                $query->where('title', 'LIKE', "%{$keyword}%")
+                      ->orWhere('body', 'LIKE', "%{$keyword}%");
+            });
+        }
+
+        // 最終的な結果を取得し、並べ替える
+        $posts = $postsQuery->get(); // コレクションを取得
+
+        $posts_count = count($posts);
 
         return view('top.index', compact(
             'user_id',
             'categories',
             'posts',
+            'keyword',
+            'posts_count',
         ));
     }
 
@@ -104,7 +126,7 @@ class TopController extends Controller
         ));
     }
 
-        /**
+    /**
      * カテゴリーごとの記事
      *
      * @param int $category_id カテゴリーID

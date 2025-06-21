@@ -3,7 +3,7 @@
     </x-slot:title>
 
     <x-slot:header>
-        <x-header />
+        <x-header :posts_count="$posts_count" />
     </x-slot:header> 
 
     <x-slot:sidebar>
