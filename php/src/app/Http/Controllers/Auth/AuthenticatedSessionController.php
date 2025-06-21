@@ -28,7 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        if ($request->session()->has('url.intended')) {
+            $intendedUrl = $request->session()->pull('url.intended');
+            return redirect()->intended($intendedUrl);
+        }
+
+        return redirect()->intended(route('top.index', absolute: false));
     }
 
     /**
@@ -44,4 +49,5 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
 }

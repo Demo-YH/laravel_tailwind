@@ -1,52 +1,75 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+        <!-- Validation Errors -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+            <!-- logo -->
+            <a class="flex items-center justify-center text-gray-600 font-bold p-5 mb-4 md:mb-0" href="{{ route('top.index') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" id="Allergens-Fish--Streamline-Flex-Gradient" height="25" width="25">
+                    <desc>
+                        Allergens Fish Streamline Icon: https://streamlinehq.com
+                    </desc>
+                    <g id="allergens-fish--fish-produce-food-allergens-allergy">
+                        <path id="Subtract" fill="url(#paint0_linear_9371_11622)" fill-rule="evenodd" d="M9.20672.0101937C10.5996.0860527 11.9618.582728 12.6894 1.31027c.7276.72754 1.2244 2.0897 1.3004 3.48254.0768 1.40876-.2689 2.98704-1.3973 4.11544-1.7644 1.76455-4.30922 2.38815-6.55018 2.45205-.15107.8316-.57953 1.615-.91692 2.1382-.48798.7569-1.50854.5979-1.90182-.0827l-.96615-1.6721-1.673228-.9668c-.6805823-.3933-.83959-1.41379-.082816-1.90179.523284-.33744 1.306634-.76599 2.138334-.91713.06375-2.24092.68719-4.78575 2.45159-6.55025C6.21965.279303 7.79793-.0665323 9.20672.0101937ZM7.31258 3.63911c.33169-.09556.67804.09585.77361.42754.19404.67349.71755 1.53356 1.84116 1.84813.33235.09306.52645.43795.43335.77035-.0931.33239-.43796.52641-.77036.43335-1.6661-.46644-2.43238-1.75849-2.70531-2.70578-.09556-.33168.09586-.67803.42755-.77359Zm2.46593.40326c-.24409-.24406-.24411-.63979-.00003-.88387.24402-.24409.63982-.2441.88392-.00003l.1795.17954c.2441.24406.2441.63979.0001.88387-.2441.24409-.6398.2441-.88393.00003l-.17956-.17954Z" clip-rule="evenodd"></path>
+                    </g>
+                    <defs>
+                        <linearGradient id="paint0_linear_9371_11622" x1="13.953" x2="-2.626" y1="14.003" y2="4.677" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#ff51e3"></stop>
+                            <stop offset="1" stop-color="#1b4dff"></stop>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="ml-3 text-2xl">辛ぇ辛ぇ草ｗｗ会員登録</span>
             </a>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+            <!-- Name -->
+            <div>
+                <x-input-label for="name" :value="__('Name')" />
+                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            </div>
+
+            <!-- Email Address -->
+            <div class="mt-4">
+                <x-input-label for="email" :value="__('Email')" />
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            </div>
+
+            <!-- Password -->
+            <div class="mt-4">
+                <x-input-label for="password" :value="__('Password')" />
+
+                <x-text-input id="password" class="block mt-1 w-full"
+                                type="password"
+                                name="password"
+                                required autocomplete="new-password" />
+
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mt-4">
+                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
+                <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                                type="password"
+                                name="password_confirmation" required autocomplete="new-password" />
+
+                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
+                    {{ __('Already registered?') }}
+                </a>
+
+                <x-primary-button class="ms-4">
+                    {{ __('Register') }}
+                </x-primary-button>
+            </div>
+        </form>
+
 </x-guest-layout>
