@@ -29,9 +29,9 @@
                             placeholder="ニュースを検索..."
                             value="{{ request('keyword') }}"
                         />
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r flex items-center justify-center">
-                            検索
-                        </button>
+                        <input type="submit" value="検索"
+                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r flex items-center justify-center">
+                    </form>
                     </form>
                     @if (!empty(request('keyword')))
                     <p class="text-sm text-gray-500 mt-2">
