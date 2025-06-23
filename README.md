@@ -52,12 +52,14 @@
 #### ※bun upgrade  
 #### 24. bun run build　コマンド実行  
 #### 25. composer require --dev "squizlabs/php_codesniffer=*"　コマンドでPHP_CodeSniffierのインストール  
-#### 26. php artisan lang:publish　コマンドでlangフォルダ作成  
-#### 27. composer require laravel-lang/lang:~8.0　コマンドで翻訳ファイル取得  
-#### 28. cp ./vendor/laravel-lang/lang/json/ja.json ./lang/　コマンドで作成された ja.json アプリケーションのディレクトリにコピー  
-#### 29. cp -r ./vendor/laravel-lang/lang/src/ja ./lang/　コマンドで と ja ディレクトリをアプリケーションのディレクトリにコピー  
-#### 30. php artisan install:api　コマンドでAPIルーティングを有効にする
-#### 31. tailwind.config.jsにてtailwindを使用する設定を行う。
+#### 26.composer require --dev barryvdh/laravel-debugbar　コマンドでLaravel Debugbarのインストール  
+#### 27. php artisan lang:publish　コマンドでlangフォルダ作成  
+#### 28. composer require laravel-lang/lang:~8.0　コマンドで翻訳ファイル取得  
+#### 29. cp ./vendor/laravel-lang/lang/json/ja.json ./lang/　コマンドで作成された ja.json アプリケーションのディレクトリにコピー  
+#### 30. cp -r ./vendor/laravel-lang/lang/src/ja ./lang/　コマンドで と ja ディレクトリをアプリケーションのディレクトリにコピー  
+#### 31. php artisan install:api　コマンドでAPIルーティングを有効にする  
+#### 32. tailwind.config.jsにてtailwindを使用する設定を行う。  
+#### 33. bun install chart.js　コマンドでグラフ用packageインストール  
 #### ※laravel12再度表示確認  
 #### ※個人お試し用以外での用途は非推奨  
 ## git cloneg後  
@@ -73,10 +75,12 @@
 [参考サイト](https://www.kamome-susume.com/laratto-overview/)  
 ※laravel9使用の内容が記載されている。  
 ※本repositoryは、laravel12及びbunを使用し、blade　compornent使用に変更した内容で構築。  
+※参考サイトに記載がないが、必要そうな処理を独自に主観的な内容で追加している。  
 ## 比較  
 #### bunを使用したが特に不自由は感じなかった。  
 ## 所感  
 #### バージョンが古いので読替えて構築するので大変だったが、ある程度基本的な内容の復習の役にたった。  
 #### フロントからの構築内容だったので難しく思えた。  
 #### modelでデータ加工を行う構築の仕方の役にたった。  
+#### 内容をすべて理解するのに、コーディングを試行している数が足りないのが分かった。  
 #### seederについて学習することができた。
