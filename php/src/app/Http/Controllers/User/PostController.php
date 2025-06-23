@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\ReservationPost;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\User\TrashController;
 use App\Http\Controllers\TopController;
@@ -18,7 +19,7 @@ class PostController extends Controller
     /**
      * __construct
      */
-    public function __construct(protected Post $post, protected Category $category)
+    public function __construct(protected Post $post, protected Category $category, protected ReservationPost $reservationPost)
     {
     }
 
@@ -68,13 +69,11 @@ class PostController extends Controller
         if ($request->has('release')) {
             $publish_flg = 1; // 公開
             $request->session()->flash('release', '記事を公開しました。');
-        } elseif ($request->has('reservation_release')) {
-            $publish_flg = 2; // 予約公開
-            $request->session()->flash('reservationRelease', '記事を予約公開しました。');
         } else {
             $publish_flg = 0; // デフォルトは下書き (save_draft)
             $request->session()->flash('saveDraft', '記事を下書きで保存しました。');
         }
+
 
         $this->post->insertPostToArticle($user_id, $request, $publish_flg);
 
@@ -98,12 +97,44 @@ class PostController extends Controller
 
     public function edit(int $post_id)
     {
+        $user_id = auth()->user()->id;
+
         $categories = $this->category->getAllCategories();
         // 投稿IDをもとに特定の投稿データを取得
         $post = $this->post->feachPostDateByPostId($post_id);
+
+        // 記事のステータスが予約公開以外はそもそも予約公開データはないので初期値はnullをセット
+        $date = null;
+        $time = null;
+        // 投稿IDをもとに予約公開データを取得
+        $reservationPost = $this->reservationPost->getReservationPostByUserIdAndPostId($user_id, $post_id);
+        // 予約公開データがあれば予約日時を取得
+        if (isset($reservationPost)) {
+            // 年・月・日にそれぞれ文字を切り出し
+            // (20220530→2022)
+            $year = substr($reservationPost->reservation_date, 0, 4);
+            // (20220530→05)
+            $month = substr($reservationPost->reservation_date, 4, 2);
+            // (20220530→30)
+            $day = substr($reservationPost->reservation_date, 6, 2);
+            // 上記に年月日をつける(2022年05月30日)
+            $date = $year . '年' . $month . '月' . $day;
+
+            // 時・分にそれぞれ文字を切り出し
+            // (083200→08)
+            $hour = substr($reservationPost->reservation_time, 0, 2);
+            // (083200→32)
+            $minute = substr($reservationPost->reservation_time, 2, 2);
+            // 上記に時・分をつける
+            $time = $hour . '時' . $minute . '分';
+        }
+
+
         return view('user.list.edit', compact(
             'categories',
             'post',
+            'date',
+            'time'
         ));
     }
 
@@ -115,17 +146,34 @@ class PostController extends Controller
         $user_id = auth()->user()->id;
 
         $post = $this->post->feachPostDateByPostId($post_id);
+        $reservationPost = $this->reservationPost->getReservationPostByUserIdAndPostId($user_id, $post_id);
 
         $validatedData = $request->validated();
 
         if ($request->has('release')) {
             $publish_flg = 1; // 公開
+            if (isset($reservationPost)) {
+                // 予約公開データの削除
+                $this->reservationPost->deleteData($reservationPost);
+            }
             $request->session()->flash('updateRelease', '記事を更新し公開しました。');
+
         } elseif ($request->has('reservation_release')) {
             $publish_flg = 2; // 予約公開
+            // 上記でもしデータがあれば、ステータスを下書きに戻すため予約公開データは不要のため削除する
+            if (isset($reservationPost)) {
+                // 予約公開データの削除
+                $this->reservationPost->deleteData($reservationPost);
+            }
             $request->session()->flash('updateReservationRelease', '記事を予約公開で更新しました。');
+
         } else {
             $publish_flg = 0; // デフォルトは下書き (save_draft)
+            // 上記でもしデータがあれば、ステータスを下書きに戻すため予約公開データは不要のため削除する
+            if (isset($reservationPost)) {
+                // 予約公開データの削除
+                $this->reservationPost->deleteData($reservationPost);
+            }
             $request->session()->flash('updateSaveDraft', '記事を下書き保存で更新しました。');
         }
 
@@ -188,4 +236,55 @@ class PostController extends Controller
         ));
     }
 
+    public function reservationUpdate(Request $request, $post_id)
+    {
+        // ログインユーザー情報を取得
+        $user_id = auth()->user()->id;
+
+        // 投稿IDをもとに特定の投稿データを取得
+        $post = $this->post->feachPostDateByPostId($post_id);
+        // 投稿データを更新
+        $this->post->updatePostToReservationRelease($request, $post);
+
+        // 画面で入力した予約設定_日付を取得
+        $date = $request->reservation_date;
+        // リクエストが2022-04-30とくるので、20220430に整形
+        $reservation_date = str_replace('-', '', $date);
+        // 画面で入力した予約時間_時を取得
+        $hour = $request->reservation_hour;
+        // 画面で入力した予約時間_分を取得
+        $minute = $request->reservation_minute;
+        // 予約時間_時と予約時間_分を合体し、末尾に00をつけてデータを整形。ex.173100
+        $reservation_time = $hour . $minute . '00';
+
+        // ユーザーIDと投稿IDをもとに更新する予約公開記事のデータを1件取得
+        $reservationPost = $this->reservationPost->getReservationPostByUserIdAndPostId($user_id, $post_id);
+
+        // 下書き→公開予約する際、そもそも予約公開データはないので$reservationPostはnullになり、画面でエラーになる。そのため制御
+        if (!isset($reservationPost)) {
+            // 予約公開設定内容をreservation_postsテーブルにinsert
+            $this->reservationPost->insertReservationPostData(
+                $post,
+                $reservation_date,
+                $reservation_time
+            );
+
+            // セッションにフラッシュメッセージを格納
+            $request->session()->flash('updateReservationRelease', '記事を予約公開で更新しました。');
+            // 投稿一覧画面にリダイレクト
+            return to_route('user.index', ['id' => $user_id]);
+        }
+
+        // すでに投稿IDに紐づく予約公開データがあれば、その予約公開データを更新
+        $this->reservationPost->updateReservationPost(
+            $reservationPost,
+            $reservation_date,
+            $reservation_time
+        );
+
+        // セッションにフラッシュメッセージを格納
+        $request->session()->flash('updateReservationRelease', '記事を予約公開で更新しました。');
+        // 投稿一覧画面にリダイレクト
+        return to_route('user.index', ['id' => $user_id]);
+    }
 }
