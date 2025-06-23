@@ -69,6 +69,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/reservation/post/edit/{post_id}', 'reservationEdit')->name('reservation.post.edit');
         Route::post('/reservation/post/edit/{post_id}', 'reservationUpdate')->name('reservation.post.update');
     });
+
+    Route::prefix('user')->middleware(['auth', 'verified'])->name('user.')->group(function () {
+    // ... 既存のユーザー関連ルート ...
+
+    // 月別記事数グラフのルート
+    Route::get('/dashboard/monthly-posts', [PostController::class, 'monthlyPostsGraph'])->name('dashboard.monthly_posts');
+    });
 });
 
 require __DIR__.'/auth.php';

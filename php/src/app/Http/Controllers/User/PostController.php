@@ -13,6 +13,8 @@ use App\Http\Requests\PostRequest;
 use App\Http\Controllers\User\TrashController;
 use App\Http\Controllers\TopController;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon; 
 
 class PostController extends Controller
 {
@@ -286,5 +288,42 @@ class PostController extends Controller
         $request->session()->flash('updateReservationRelease', '記事を予約公開で更新しました。');
         // 投稿一覧画面にリダイレクト
         return to_route('user.index', ['id' => $user_id]);
+    }
+
+    public function monthlyPostsGraph()
+    {
+        $user_id = auth()->user()->id;
+
+        // 直近12ヶ月の範囲を生成
+        $months = collect([]);
+        for ($i = 11; $i >= 0; $i--) {
+            $months->push(Carbon::now()->subMonths($i)->format('Y-m'));
+        }
+
+        // 月別の記事数を取得
+        $monthlyPostsRaw = Post::select(
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"), // MySQLの場合
+            // DB::raw("strftime('%Y-%m', created_at) as month"), // SQLiteの場合
+            // DB::raw("TO_CHAR(created_at, 'YYYY-MM') as month"), // PostgreSQLの場合
+            DB::raw('count(*) as total')
+        )
+            ->where('user_id', $user_id)
+            ->where('publish_flg', 1) // 公開済みの記事のみを対象
+            ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth()) // 過去12ヶ月の範囲に限定
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get()
+            ->keyBy('month'); // monthをキーとする連想配列に変換
+
+        $labels = [];
+        $data = [];
+
+        // 過去12ヶ月分のすべての月に記事数をマージ
+        foreach ($months as $month) {
+            $labels[] = $month;
+            $data[] = $monthlyPostsRaw->has($month) ? $monthlyPostsRaw[$month]->total : 0;
+        }
+        // ビューにデータを渡す
+        return view('user.list.monthly_graph', compact('labels', 'data'));
     }
 }
