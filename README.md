@@ -1,5 +1,5 @@
-# 環境お試し目的(tailwind+bun)  
-## 環境  
+# 投稿・予約投稿管理アプリ(Laravel 12 + Vite + Tailwind)  
+
 <img alt="Static Badge" src="https://img.shields.io/badge/wsl2-w?style=plastic&logo=linux&logoColor=000000&labelColor=%23FCC624&color=%23FCC624"> <img alt="Static Badge" src="https://img.shields.io/badge/ubuntu-u?style=plastic&logo=ubuntu&logoColor=%23ffffff&labelColor=%23E95420&color=%23E95420"> <img alt="Static Badge" src="https://img.shields.io/badge/debian-l?style=plastic&logo=debian&logoColor=ffffff&labelColor=A81D33&color=A81D33">  
 <img alt="Static Badge" src="https://img.shields.io/badge/Docker-d?style=plastic&logo=docker&logoColor=%23ffffff&labelColor=%232496ED&color=%232496ED">
 <img alt="Static Badge" src="https://img.shields.io/badge/NGINX-n?style=plastic&logo=nginx&logoColor=%23ffffff">
@@ -12,71 +12,73 @@
 <img alt="Static Badge" src="https://img.shields.io/badge/vite-v?style=plastic&logo=vite&logoColor=%23ffffff&labelColor=%23646CFF&color=%23646CFF">
 <img alt="Static Badge" src="https://img.shields.io/badge/-breeze?style=plastic&logo=breeze&label=breeze&labelColor=c1c1c1&color=c1c1c1">  
 
+## プロジェクト概要  
+参考サイトの手順をもとに学習目的で作成した小規模ブログ／投稿管理アプリです。  
+学習用に作ったプロジェクトですが、設計や技術スタックは実務で使えるレベルを意識しています。
 
-## 構築手順  
-#### 1. wsl使用の為、仮想マシン プラットフォームを有効化  
-####  (wslがインストールされていない場合:Linuxカーネル更新プログラムパッケージを  
-####  インストールする)  
-#### 2. wsl --set-default-version 2 コマンドでLinuxを標準でWSL2上で動くように設定  
-#### 3. wsl --list --verbose　コマンドでLinuxがWSL1とWSL2のどちらで動いているかを確認  
-#### 4. ubuntuをインストール  
-#### 5. terminalにてアカウント作成  
-#### 6. 任意のフォルダ作成  
-#### 7. Docker Desktopインストール  
-#### 8. dockerでwslを使用する設定に変更  
-#### 9. terminalに戻りdockerで使用するイメージのフォルダ構成作成  
-#### 10. Dockerfileにて、使用するイメージ作成の設定  
-#### 11. composer.ymlにて作成するコンテナの初期状態を  
-#### 「ports:」「volumes:」などYAML形式を用いて定義。  
-#### 12. その他の使用するイメージの設定ファイル(my.cnf、default.conf)作成  
-#### 13. docker compose up -d　コマンドを実行してコンテナの作成・起動  
-#### 14. docker exec -it conteinerID bashでコンテナにはいる  
-#### 15. 以降はLaravel12の環境構築  
-#### ※bunインストールがalpineだとうまくいかなかった為、今回はphp-fpm(debian)を使用
-#### 16. composer create-project laravel/laravel example　コマンドでLaravelプロジェクトの作成  
-#### 17．cd example  
-#### 18. php artisan serve --host 0.0.0.0　コマンドで開発サーバーを起動
-#### ※初回のみ実施、以降はdocker compose up -dでDoker起動 
-#### ※エラー：failed to open stream: Permission denied  
-#### chmod -R 777 storage　コマンドで解消  
-#### 19. mysql使用の為、".env"の下記内容を修正
-#### DB_CONNECTION=mysql　sqlite→mysql  
-#### DB_HOST=127.0.0.1　使用しているdb名に修正  
-#### DB_HOST以降からDB_PASSWORDまでのコメントアウト解除及び、自身で設定した内容への修正を行う  
-#### 20. php artisan migrate　コマンドでマイグレーション仕直す  
-#### ※dbはお好みでどうぞ、sqliteを使用する場合は上記手順は不要  
-#### 21. composer require laravel/breeze --dev　コマンドでbreezeパッケージインストール
-#### 22. php artisan breeze:install　コマンドでbreezeインストール  
-#### 23. bun install　コマンドでbunインストール  
-#### ※インストールが上手くいかないときは、下記コマンド実行してからインストール  
-#### ※bun upgrade  
-#### 24. bun run build　コマンド実行  
-#### 25. composer require --dev "squizlabs/php_codesniffer=*"　コマンドでPHP_CodeSniffierのインストール  
-#### 26. php artisan lang:publish　コマンドでlangフォルダ作成  
-#### 27. composer require laravel-lang/lang:~8.0　コマンドで翻訳ファイル取得  
-#### 28. cp ./vendor/laravel-lang/lang/json/ja.json ./lang/　コマンドで作成された ja.json アプリケーションのディレクトリにコピー  
-#### 29. cp -r ./vendor/laravel-lang/lang/src/ja ./lang/　コマンドで と ja ディレクトリをアプリケーションのディレクトリにコピー  
-#### 30. php artisan install:api　コマンドでAPIルーティングを有効にする
-#### 31. tailwind.config.jsにてtailwindを使用する設定を行う。
-#### ※laravel12再度表示確認  
-#### ※個人お試し用以外での用途は非推奨  
-## git cloneg後  
-#### 1. docker exec -it conteinerID bashでコンテナにはいる  
-#### 2．cd example　コマンド実行  
-#### 3. composer update　コマンド実行でautoload.php作成  
-#### 4. cp .env.example .env　コマンドで.env作成  
-#### 5. php artisan key:generate　コマンド実行  
-#### 6. php artisan migrate　コマンド実行でdb再度作成  
-#### 7. bun install　コマンドでbunインストール  
-#### 8. bun run build　コマンド実行  
-## 参考  
-[参考サイト](https://www.kamome-susume.com/laratto-overview/)  
-※laravel9使用の内容が記載されている。  
-※本repositoryは、laravel12及びbunを使用し、blade　compornent使用に変更した内容で構築。  
-## 比較  
-#### bunを使用したが特に不自由は感じなかった。  
-## 所感  
-#### バージョンが古いので読替えて構築するので大変だったが、ある程度基本的な内容の復習の役にたった。  
-#### フロントからの構築内容だったので難しく思えた。  
-#### modelでデータ加工を行う構築の仕方の役にたった。  
-#### seederについて学習することができた。
+## 学習・検証目的
+- MVC / Eloquent を用いたモデル設計・データ操作
+- サービス層による責務分離・テスト容易性の確保
+- バリデーション / フォームリクエストによる入力管理
+- Vite + Tailwind によるフロントエンドビルドとモダンな開発フロー
+- Docker Compose による複数コンテナ環境構築
+- 予約投稿の概念を理解したスケジューリング設計
+
+## 使用技術
+| カテゴリ | 使用技術 |
+| :--- | :--- |
+| **Backend** | Laravel 12, breeze, PHP_CodeSniffer, Debugbar |
+| **Frontend** | blade, Vite, Tailwind CSS, bun |
+| **Infrastructure** | Docker Compose (App / Node / MySQL / Nginx) |
+| **OS Environment** | WSL2 (Ubuntu / Alpine Linux) |
+| **Database** | MySQL 8.x |
+
+## セットアップ手順
+
+### 1. インフラのビルドと起動
+```bash
+docker compose build
+docker compose up -d
+```
+
+### 2. バックエンドの初期化
+```
+docker compose exec app bash
+composer require laravel/breeze --dev
+composer install
+php artisan breeze:install
+php artisan migrate
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+```
+### 3. フロントエンド依存関係
+```
+bun install
+bun run build
+``` 
+
+## 設計・実装の特徴
+- Post と ReservationPost を分離して、公開タイミングや状態管理を整理
+- ビジネスロジックは app/Services に置き、コントローラの責務を薄く
+- バリデーションは app/Http/Requests に集約
+- サンプルデータは database/seeders で簡単に再現可能
+- Vite を使ったモダンな開発ワークフロー（ホットリロード、ES モジュール対応）
+
+## ディレクトリ構成
+以下はこのリポジトリ内の主要なフォルダと役割の説明です（初心者向けの短い解説付き）。
+- app/Models - Eloquent モデル
+- app/Http/Controllers - ルーティング処理
+- app/Http/Requests - フォームリクエスト
+- app/Services - サービス層
+- database/migrations / seeders / factories
+- resources/views, resources/js, resources/css
+- routes/ - web/api/auth
+- tests/ - PHPUnit
+- config/ - 設定ファイル
+
+## 今後の展望
+- サービス層・フォームリクエストの活用経験をさらに深める
+- SPA 風の UI / UX を強化
+- Vite + Tailwind によるフロントエンドビルド、モダンな SPA 開発フローの経験
+- Docker マルチコンテナ運用経験のブラッシュアップ
+- 予約投稿やスケジューリングの実務レベル実装経験

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\Category;
 use App\Services\UserService;
+use Illuminate\Pagination\Paginator;
 
 class TopController extends Controller
 {
@@ -58,54 +59,6 @@ class TopController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
-    /**
      * 記事詳細
      *
      * @param int $post_id 記事ID
@@ -138,7 +91,7 @@ class TopController extends Controller
 
         $categories = $this->category->getAllCategories();
         // カテゴリーIDをもとにカテゴリーごとの記事を取得
-        $posts = $this->post->getPostByCategoryId($category_id);
+        $posts = $this->post->getPostByCategoryId($category_id)->Paginate(3);
         return view('article.category', compact(
             'user_id',
             'categories',

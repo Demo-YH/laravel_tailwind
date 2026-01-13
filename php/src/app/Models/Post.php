@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Category;
 use App\Models\User;
-use App\Http\Requests\PostRequest;
+use App\Models\ReservationPost;
 
 class Post extends Model
 {
@@ -62,8 +62,7 @@ class Post extends Model
                             ['delete_flg', 0],
                         ])
                         ->with('category')
-                        ->orderBy('updated_at', 'DESC')
-                        ->get();
+                        ->orderBy('updated_at', 'DESC');
         return $result;
     }
 
@@ -77,8 +76,7 @@ class Post extends Model
         $result = $this->where([
                             ['category_id', $category_id],
                             ['delete_flg', 0],
-                        ])
-                        ->get();
+        ]);
         return $result;
     }
 
@@ -90,7 +88,7 @@ class Post extends Model
      * @param array $request リクエストデータ
      * @return object $result App\Models\Post
      */
-    public function insertPostToArticle(int $user_id, PostRequest $request, int $flg)
+    public function insertPostToArticle(int $user_id, $request, int $flg)
     {
         // created_atやupdated_atはmDB登録時に自動的に今日の日時で登録されるので、記載しない
         $result = $this->create([
@@ -115,7 +113,7 @@ class Post extends Model
      * @param array $request リクエストデータ
      * @return object $result App\Models\Post
      */
-    public function updatePostToSaveArticle(PostRequest $request, Post $post, int $flg)
+    public function updatePostToSaveArticle($request, Post $post, int $flg)
     {
         $result = $post->fill([
             'category_id'      => $request->category,
@@ -166,9 +164,7 @@ class Post extends Model
         $result = $this->where([
                             ['user_id', $user_id],
                             ['delete_flg', 1],
-                        ])
-                        ->get();
-
+        ]);
         return $result;
     }
 
@@ -229,8 +225,7 @@ class Post extends Model
                             ['publish_flg', $flg],
                             ['delete_flg', 0]
                         ])
-                        ->orderBy('updated_at', 'DESC')
-                        ->get();
+                        ->orderBy('updated_at', 'DESC');
         return $result;
     }
 

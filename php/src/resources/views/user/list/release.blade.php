@@ -133,6 +133,7 @@
                     </div>
                 </div>
             </div>
+            {{ $releases->links('vendor.pagination.tailwind2') }}
         </div>
     </section>
 

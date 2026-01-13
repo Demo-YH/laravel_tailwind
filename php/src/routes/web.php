@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TopController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Controllers\User\TrashController;
+use App\Http\Controllers\User\ReservationPostController;
 use Illuminate\Support\Facades\Auth;
 use App\View\Components\Sidebar;
 
@@ -41,25 +42,40 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    //@todo delete:login済みでないと遷移させない(bootstrap/app.phpでmiddleware)
+    Route::controller(PostController::class)->group(function() {
+        Route::get('/user/{id}/index', 'index')->name('user.index');
+        Route::get('/user/{id}/post/create', 'create')->name('post.create');
+        Route::post('/user/{id}/post', 'store')->name('post.store');
+        Route::get('/post/show/{post_id}', 'show')->name('post.show');
+        Route::get('/post/edit/{post_id}', 'edit')->name('post.edit');
+        Route::post('/post/edit/{post_id}', 'update')->name('post.update');
+        Route::get('/post/saveDraft', 'saveDraft')->name('post.saveDraft');
+        Route::get('/post/release', 'release')->name('post.release');
+        Route::get('/post/reservationRelease', 'reservationRelease')->name('post.reservationRelease');
+    });
+    
+    Route::controller(TrashController::class)->group(function() {
+        Route::get('/post/trash', 'trashList')->name('post.trash');
+        Route::post('/post/trash/{post_id}', 'moveTrash')->name('post.move.trash');
+        Route::post('/post/restore/{post_id}', 'restore')->name('post.restore');
+        Route::post('/post/delete/{post_id}', 'delete')->name('post.delete');
+    });
+
+    Route::controller(ReservationPostController::class)->group(function() {
+        Route::get('/reservation/post/setting', 'reservationSetting')->name('reservation.post');
+        Route::post('/reservation/post/store', 'reservationStore')->name('reservation.post.store');
+        Route::get('/reservation/post/edit/{post_id}', 'reservationEdit')->name('reservation.post.edit');
+        Route::post('/reservation/post/edit/{post_id}', 'reservationUpdate')->name('reservation.post.update');
+    });
+
+    Route::prefix('user')->middleware(['auth', 'verified'])->name('user.')->group(function () {
+    // ... 既存のユーザー関連ルート ...
+
+    // 月別記事数グラフのルート
+    Route::get('/dashboard/monthly-posts', [PostController::class, 'monthlyPostsGraph'])->name('dashboard.monthly_posts');
+    });
 });
 
 require __DIR__.'/auth.php';
-
-Route::controller(PostController::class)->group(function() {
-    Route::get('/user/{id}/index', 'index')->name('user.index');
-    Route::get('/user/{id}/post/create', 'create')->name('post.create');
-    Route::post('/user/{id}/post', 'store')->name('post.store');
-    Route::get('/post/show/{post_id}', 'show')->name('post.show');
-    Route::get('/post/edit/{post_id}', 'edit')->name('post.edit');
-    Route::post('/post/edit/{post_id}', 'update')->name('post.update');
-    Route::get('/post/saveDraft', 'saveDraft')->name('post.saveDraft');
-    Route::get('/post/release', 'release')->name('post.release');
-    Route::get('/post/reservationRelease', 'reservationRelease')->name('post.reservationRelease');
-});
-
-Route::controller(TrashController::class)->group(function() {
-    Route::get('/post/trash', 'trashList')->name('post.trash');
-    Route::post('/post/trash/{post_id}', 'moveTrash')->name('post.move.trash');
-    Route::post('/post/restore/{post_id}', 'restore')->name('post.restore');
-    Route::post('/post/delete/{post_id}', 'delete')->name('post.delete');
-});

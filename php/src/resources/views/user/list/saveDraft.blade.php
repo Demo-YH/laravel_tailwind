@@ -133,6 +133,7 @@
                     </div>
                 </div>
             </div>
+            {{ $saveDrafts->links('vendor.pagination.tailwind2') }}
         </div>
     </section>
 
